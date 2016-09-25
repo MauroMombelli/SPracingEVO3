@@ -1,0 +1,718 @@
+Archive member included to satisfy reference by file (symbol)
+
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o)
+                              ./system/src/newlib/_sbrk.o (symbol from plugin) (__errno)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-impure.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o) (_impure_ptr)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-strlen.o)
+                              ./system/src/diag/Trace.o (symbol from plugin) (strlen)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-vsnprintf.o)
+                              ./system/src/diag/Trace.o (symbol from plugin) (vsnprintf)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-vsnprintf.o) (_svfprintf_r)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-vfprintf_i.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o) (_printf_i)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memchr.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o) (memchr)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memcpy-stub.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o) (memcpy)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memmove.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o) (memmove)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-freer.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o) (_free_r)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-mallocr.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o) (_malloc_r)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-reallocr.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o) (_realloc_r)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-sbrkr.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-mallocr.o) (_sbrk_r)
+/usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-msizer.o)
+                              /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-reallocr.o) (_malloc_usable_size_r)
+/usr/lib/gcc/arm-none-eabi/6.2.0/armv7e-m/libgcc.a(_arm_addsubsf3.o)
+                              /tmp/ccPTv6Lu.ltrans0.ltrans.o (__aeabi_i2f)
+
+Allocating common symbols
+Common symbol       size              file
+
+timer_delayCount    0x4               ./src/Timer.o (symbol from plugin)
+errno               0x4               /tmp/ccPTv6Lu.ltrans0.ltrans.o
+
+Discarded input sections
+
+ .text          0x0000000000000000        0x0 ./system/src/stm32f3-stdperiph/stm32f30x_gpio.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .data          0x0000000000000000        0x0 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .bss           0x0000000000000000        0x0 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text          0x0000000000000000        0x0 ./system/src/stm32f3-stdperiph/stm32f30x_misc.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/stm32f3-stdperiph/stm32f30x_rcc.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/stm32f3-stdperiph/stm32f30x_spi.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/stm32f3-stdperiph/stm32f30x_usart.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/newlib/_cxx.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/newlib/_exit.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/newlib/_sbrk.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/newlib/_startup.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/newlib/_syscalls.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/newlib/assert.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/diag/Trace.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/diag/trace_impl.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/cortexm/_initialize_hardware.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/cortexm/_reset_hardware.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/cortexm/exception_handlers.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/cmsis/system_stm32f30x.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./system/src/cmsis/vectors_stm32f30x.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./src/serial/usart.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./src/BlinkLed.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./src/Timer.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./src/_write.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./src/main.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./src/mpu9250.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 ./src/spi.o (symbol from plugin)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-impure.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-impure.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-impure.o)
+ .rodata._global_impure_ptr
+                0x0000000000000000        0x4 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-impure.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-strlen.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-strlen.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-vsnprintf.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-vsnprintf.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-vsnprintf.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o)
+ .text.__ssprint_r
+                0x0000000000000000       0xf4 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-vfprintf_i.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-vfprintf_i.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-vfprintf_i.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memchr.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memchr.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memcpy-stub.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memcpy-stub.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memcpy-stub.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memmove.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memmove.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memmove.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-freer.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-freer.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-freer.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-mallocr.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-mallocr.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-mallocr.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-reallocr.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-reallocr.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-reallocr.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-sbrkr.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-sbrkr.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-sbrkr.o)
+ .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-msizer.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-msizer.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-msizer.o)
+ .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/armv7e-m/libgcc.a(_arm_addsubsf3.o)
+ .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/armv7e-m/libgcc.a(_arm_addsubsf3.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+RAM              0x0000000020000000 0x000000000000a000 xrw
+CCMRAM           0x0000000010000000 0x0000000000002000 xrw
+FLASH            0x0000000008000000 0x0000000000040000 xr
+FLASHB1          0x0000000000000000 0x0000000000000000 xr
+EXTMEMB0         0x0000000000000000 0x0000000000000000 xr
+EXTMEMB1         0x0000000000000000 0x0000000000000000 xr
+EXTMEMB2         0x0000000000000000 0x0000000000000000 xr
+EXTMEMB3         0x0000000000000000 0x0000000000000000 xr
+MEMORY_ARRAY     0x0000000020002000 0x0000000000000000 xrw
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD ./system/src/stm32f3-stdperiph/stm32f30x_gpio.o
+LOAD /tmp/ccPTv6Lu.ltrans0.ltrans.o
+LOAD ./system/src/stm32f3-stdperiph/stm32f30x_misc.o
+LOAD ./system/src/stm32f3-stdperiph/stm32f30x_rcc.o
+LOAD ./system/src/stm32f3-stdperiph/stm32f30x_spi.o
+LOAD ./system/src/stm32f3-stdperiph/stm32f30x_usart.o
+LOAD ./system/src/newlib/_cxx.o
+LOAD ./system/src/newlib/_exit.o
+LOAD ./system/src/newlib/_sbrk.o
+LOAD ./system/src/newlib/_startup.o
+LOAD ./system/src/newlib/_syscalls.o
+LOAD ./system/src/newlib/assert.o
+LOAD ./system/src/diag/Trace.o
+LOAD ./system/src/diag/trace_impl.o
+LOAD ./system/src/cortexm/_initialize_hardware.o
+LOAD ./system/src/cortexm/_reset_hardware.o
+LOAD ./system/src/cortexm/exception_handlers.o
+LOAD ./system/src/cmsis/system_stm32f30x.o
+LOAD ./system/src/cmsis/vectors_stm32f30x.o
+LOAD ./src/serial/usart.o
+LOAD ./src/BlinkLed.o
+LOAD ./src/Timer.o
+LOAD ./src/_write.o
+LOAD ./src/main.o
+LOAD ./src/mpu9250.o
+LOAD ./src/spi.o
+LOAD /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libstdc++_nano.a
+LOAD /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libm.a
+START GROUP
+LOAD /usr/lib/gcc/arm-none-eabi/6.2.0/armv7e-m/libgcc.a
+LOAD /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a
+LOAD /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libc_nano.a
+END GROUP
+START GROUP
+LOAD /usr/lib/gcc/arm-none-eabi/6.2.0/armv7e-m/libgcc.a
+LOAD /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libc_nano.a
+END GROUP
+                0x000000002000a000                __stack = (ORIGIN (RAM) + LENGTH (RAM))
+                0x000000002000a000                _estack = __stack
+                0x0000000000000400                __Main_Stack_Size = 0x400
+                [!provide]                        PROVIDE (_Main_Stack_Size, __Main_Stack_Size)
+                0x0000000020009c00                __Main_Stack_Limit = (__stack - __Main_Stack_Size)
+                [!provide]                        PROVIDE (_Main_Stack_Limit, __Main_Stack_Limit)
+                0x0000000000000100                _Minimum_Stack_Size = 0x100
+                0x0000000020000178                PROVIDE (_Heap_Begin, _end_noinit)
+                0x0000000020009c00                PROVIDE (_Heap_Limit, (__stack - __Main_Stack_Size))
+
+.isr_vector     0x0000000008000000      0x3c0
+ FILL mask 0xff
+                0x0000000008000000                __vectors_start = ABSOLUTE (.)
+                0x0000000008000000                __vectors_start__ = ABSOLUTE (.)
+ *(.isr_vector)
+ .isr_vector    0x0000000008000000      0x188 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+                0x0000000008000000                __isr_vectors
+ *(.cfmconfig)
+ *(.after_vectors .after_vectors.*)
+ .after_vectors
+                0x0000000008000188      0x238 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+                0x00000000080001dc                UsageFault_Handler_C
+                0x0000000008000210                BusFault_Handler_C
+                0x0000000008000244                HardFault_Handler_C
+                0x00000000080002a4                _start
+
+.inits          0x00000000080003c0       0x28
+                0x00000000080003c0                __data_regions_array_start = .
+                0x00000000080003c0        0x4 LONG 0x80026e8 LOADADDR (.data)
+                0x00000000080003c4        0x4 LONG 0x20000000 ADDR (.data)
+                0x00000000080003c8        0x4 LONG 0x200000b4 (ADDR (.data) + SIZEOF (.data))
+                0x00000000080003cc        0x4 LONG 0x80026e8 LOADADDR (.data_CCMRAM)
+                0x00000000080003d0        0x4 LONG 0x10000000 ADDR (.data_CCMRAM)
+                0x00000000080003d4        0x4 LONG 0x10000000 (ADDR (.data_CCMRAM) + SIZEOF (.data_CCMRAM))
+                0x00000000080003d8                __data_regions_array_end = .
+                0x00000000080003d8                __bss_regions_array_start = .
+                0x00000000080003d8        0x4 LONG 0x200000b4 ADDR (.bss)
+                0x00000000080003dc        0x4 LONG 0x20000178 (ADDR (.bss) + SIZEOF (.bss))
+                0x00000000080003e0        0x4 LONG 0x10000000 ADDR (.bss_CCMRAM)
+                0x00000000080003e4        0x4 LONG 0x10000000 (ADDR (.bss_CCMRAM) + SIZEOF (.bss_CCMRAM))
+                0x00000000080003e8                __bss_regions_array_end = .
+ *(.init)
+ *(.fini)
+                0x00000000080003e8                . = ALIGN (0x4)
+                0x00000000080003e8                PROVIDE (__preinit_array_start, .)
+ *(.preinit_array_sysinit .preinit_array_sysinit.*)
+ *(.preinit_array_platform .preinit_array_platform.*)
+ *(.preinit_array .preinit_array.*)
+                0x00000000080003e8                PROVIDE (__preinit_array_end, .)
+                0x00000000080003e8                . = ALIGN (0x4)
+                0x00000000080003e8                PROVIDE (__init_array_start, .)
+ *(SORT(.init_array.*))
+ *(.init_array)
+                0x00000000080003e8                PROVIDE (__init_array_end, .)
+                0x00000000080003e8                . = ALIGN (0x4)
+                0x00000000080003e8                PROVIDE (__fini_array_start, .)
+ *(SORT(.fini_array.*))
+ *(.fini_array)
+                0x00000000080003e8                PROVIDE (__fini_array_end, .)
+
+.flashtext
+ *(.flashtext .flashtext.*)
+
+.text           0x00000000080003f0     0x22f6
+ *(.text .text.*)
+ .text.timer_tick
+                0x00000000080003f0       0x10 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.SysTick_Handler
+                0x0000000008000400        0x8 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.timer_sleep
+                0x0000000008000408       0x14 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.timer_start
+                0x000000000800041c       0x38 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.SetSysClock
+                0x0000000008000454       0xb0 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.SystemCoreClockUpdate
+                0x0000000008000504       0x90 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.SystemInit
+                0x0000000008000594       0x64 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.isSemihosting
+                0x00000000080005f8       0x20 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.__initialize_hardware
+                0x0000000008000618        0x8 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.__initialize_hardware_early
+                0x0000000008000620       0x18 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text._trace_write_semihosting_debug
+                0x0000000008000638       0x60 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.trace_write
+                0x0000000008000698        0x8 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.__initialize_args
+                0x00000000080006a0       0x10 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text._exit    0x00000000080006b0        0x2 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.USART_ClockStructInit
+                0x00000000080006b2        0xc /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x00000000080006be        0x2 
+ .text.RCC_GetClocksFreq
+                0x00000000080006c0      0x2c0 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.trace_puts
+                0x0000000008000980       0x20 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.abort    0x00000000080009a0       0x14 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.trace_printf
+                0x00000000080009b4       0x30 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.dumpExceptionStack
+                0x00000000080009e4       0xf4 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.assert_failed
+                0x0000000008000ad8       0x14 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.USART_GetFlagStatus
+                0x0000000008000aec       0xc8 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.USART_SendData
+                0x0000000008000bb4       0x54 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.USART_Cmd
+                0x0000000008000c08       0x60 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.USART_ClockInit
+                0x0000000008000c68       0x94 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.USART_Init
+                0x0000000008000cfc      0x184 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.SPI_I2S_GetFlagStatus
+                0x0000000008000e80       0x78 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.SPI_ReceiveData8
+                0x0000000008000ef8       0x3c /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.SPI_SendData8
+                0x0000000008000f34       0x30 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.spiTransfer
+                0x0000000008000f64       0x76 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.spiTransferByte
+                0x0000000008000fda       0x4a /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.SPI_Cmd  0x0000000008001024       0x54 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.spiSetDivisor
+                0x0000000008001078       0x9e /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x0000000008001116        0x2 
+ .text.RCC_APB2PeriphClockCmd
+                0x0000000008001118       0x48 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.RCC_AHBPeriphClockCmd
+                0x0000000008001160       0x48 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.NVIC_Init
+                0x00000000080011a8       0x94 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.NVIC_Config
+                0x000000000800123c       0x26 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x0000000008001262        0x2 
+ .text.GPIO_PinAFConfig
+                0x0000000008001264       0x90 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.GPIO_ResetBits
+                0x00000000080012f4       0x50 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.GPIO_SetBits
+                0x0000000008001344       0x50 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.mpu6500ReadRegister
+                0x0000000008001394       0x58 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.gyro_get_data
+                0x00000000080013ec       0x56 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x0000000008001442        0x2 
+ .text.mpu6500WriteRegister
+                0x0000000008001444       0x3c /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.mpu6500InitLogic
+                0x0000000008001480       0x60 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.GPIO_Init
+                0x00000000080014e0      0x110 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.mpu6500InitHw
+                0x00000000080015f0       0x60 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.gyro_init
+                0x0000000008001650       0x2a /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x000000000800167a        0x2 
+ .text.blink_led_init
+                0x000000000800167c       0x44 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.USART1_Init
+                0x00000000080016c0       0xa8 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text.main     0x0000000008001768      0x13c /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .text._sbrk    0x00000000080018a4       0x44 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+                0x00000000080018a4                _sbrk
+ .text.__errno  0x00000000080018e8        0xc /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o)
+                0x00000000080018e8                __errno
+ .text          0x00000000080018f4       0x10 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-strlen.o)
+                0x00000000080018f4                strlen
+ .text._vsnprintf_r
+                0x0000000008001904       0x58 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-vsnprintf.o)
+                0x0000000008001904                _vsnprintf_r
+                0x0000000008001904                _vsniprintf_r
+ .text.vsnprintf
+                0x000000000800195c       0x1c /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-vsnprintf.o)
+                0x000000000800195c                vsnprintf
+                0x000000000800195c                vsniprintf
+ .text.__ssputs_r
+                0x0000000008001978       0xb6 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o)
+                0x0000000008001978                __ssputs_r
+ *fill*         0x0000000008001a2e        0x2 
+ .text._svfprintf_r
+                0x0000000008001a30      0x1e8 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o)
+                0x0000000008001a30                _svfprintf_r
+                0x0000000008001a30                _svfiprintf_r
+ .text._printf_common
+                0x0000000008001c18       0xec /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-vfprintf_i.o)
+                0x0000000008001c18                _printf_common
+ .text._printf_i
+                0x0000000008001d04      0x240 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-vfprintf_i.o)
+                0x0000000008001d04                _printf_i
+ *fill*         0x0000000008001f44        0xc 
+ .text          0x0000000008001f50       0xa0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memchr.o)
+                0x0000000008001f50                memchr
+ .text.memcpy   0x0000000008001ff0       0x16 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memcpy-stub.o)
+                0x0000000008001ff0                memcpy
+ .text.memmove  0x0000000008002006       0x34 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memmove.o)
+                0x0000000008002006                memmove
+ *fill*         0x000000000800203a        0x2 
+ .text._free_r  0x000000000800203c       0x88 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-freer.o)
+                0x000000000800203c                _free_r
+ .text._malloc_r
+                0x00000000080020c4       0xa4 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-mallocr.o)
+                0x00000000080020c4                _malloc_r
+ .text._realloc_r
+                0x0000000008002168       0x4c /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-reallocr.o)
+                0x0000000008002168                _realloc_r
+ .text._sbrk_r  0x00000000080021b4       0x20 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-sbrkr.o)
+                0x00000000080021b4                _sbrk_r
+ .text._malloc_usable_size_r
+                0x00000000080021d4       0x12 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-msizer.o)
+                0x00000000080021d4                _malloc_usable_size_r
+ *fill*         0x00000000080021e6        0x2 
+ .text          0x00000000080021e8      0x21c /usr/lib/gcc/arm-none-eabi/6.2.0/armv7e-m/libgcc.a(_arm_addsubsf3.o)
+                0x00000000080021e8                __aeabi_frsub
+                0x00000000080021f0                __subsf3
+                0x00000000080021f0                __aeabi_fsub
+                0x00000000080021f4                __aeabi_fadd
+                0x00000000080021f4                __addsf3
+                0x0000000008002354                __aeabi_ui2f
+                0x0000000008002354                __floatunsisf
+                0x000000000800235c                __aeabi_i2f
+                0x000000000800235c                __floatsisf
+                0x0000000008002378                __floatundisf
+                0x0000000008002378                __aeabi_ul2f
+                0x0000000008002388                __floatdisf
+                0x0000000008002388                __aeabi_l2f
+ *(.rodata .rodata.* .constdata .constdata.*)
+ .rodata.GPIO_PinAFConfig.str1.4
+                0x0000000008002404       0x31 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x0000000008002435        0x3 
+ .rodata.NVIC_Init.str1.4
+                0x0000000008002438       0x31 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x0000000008002469        0x3 
+ .rodata.RCC_APB2PeriphClockCmd.str1.4
+                0x000000000800246c       0x30 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .rodata.SPI_I2S_GetFlagStatus.str1.4
+                0x000000000800249c       0x30 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .rodata.USART_GetFlagStatus.str1.4
+                0x00000000080024cc       0x32 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x00000000080024fe        0x2 
+ .rodata.abort.str1.4
+                0x0000000008002500       0x14 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .rodata.assert_failed.str1.4
+                0x0000000008002514       0x2b /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x000000000800253f        0x1 
+ .rodata.dumpExceptionStack.str1.4
+                0x0000000008002540      0x11a /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x000000000800265a        0x2 
+ .rodata.main.str1.4
+                0x000000000800265c       0x29 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x0000000008002685        0x3 
+ .rodata.str1.4
+                0x0000000008002688       0x29 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .rodata.trace_puts.str1.4
+                0x00000000080026b1       0x2c /tmp/ccPTv6Lu.ltrans0.ltrans.o
+                                          0x2 (size before relaxing)
+ .rodata.str1.1
+                0x00000000080026b1        0x2 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-impure.o)
+ .rodata._svfprintf_r.str1.1
+                0x00000000080026b3       0x11 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o)
+ .rodata._printf_i.str1.1
+                0x00000000080026c4       0x22 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-vfprintf_i.o)
+ *(vtable)
+ *(.eh_frame*)
+ *(.glue_7)
+ .glue_7        0x00000000080026e6        0x0 linker stubs
+ *(.glue_7t)
+ .glue_7t       0x00000000080026e6        0x0 linker stubs
+
+.vfp11_veneer   0x00000000080026e8        0x0
+ .vfp11_veneer  0x00000000080026e8        0x0 linker stubs
+
+.v4_bx          0x00000000080026e8        0x0
+ .v4_bx         0x00000000080026e8        0x0 linker stubs
+
+.iplt           0x00000000080026e8        0x0
+ .iplt          0x00000000080026e8        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o)
+
+.rel.dyn        0x00000000080026e8        0x0
+ .rel.iplt      0x00000000080026e8        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o)
+
+.ARM.extab
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+                0x00000000080026e8                . = ALIGN (0x4)
+                0x00000000080026e8                __exidx_start = .
+
+.ARM.exidx
+ *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+                0x00000000080026e8                __exidx_end = .
+                0x00000000080026e8                . = ALIGN (0x4)
+                0x00000000080026e8                _etext = .
+                0x00000000080026e8                __etext = .
+
+.data_CCMRAM    0x0000000010000000        0x0 load address 0x00000000080026e8
+ FILL mask 0xff
+ *(.data.CCMRAM .data.CCMRAM.*)
+                0x0000000010000000                . = ALIGN (0x4)
+                0x00000000080026e8                _sidata = LOADADDR (.data)
+
+.data           0x0000000020000000       0xb4 load address 0x00000000080026e8
+ FILL mask 0xff
+                0x0000000020000000                _sdata = .
+                0x0000000020000000                __data_start__ = .
+ *(.data_begin .data_begin.*)
+ .data_begin    0x0000000020000000        0x4 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *(.data .data.*)
+ .data.ADCPrescTable
+                0x0000000020000004       0x1a /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x000000002000001e        0x2 ff
+ .data.AHBPrescTable
+                0x0000000020000020       0x10 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .data.APBAHBPrescTable
+                0x0000000020000030       0x10 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .data.SystemCoreClock
+                0x0000000020000040        0x4 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .data.argv.4207
+                0x0000000020000044        0x8 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .data._impure_ptr
+                0x000000002000004c        0x4 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-impure.o)
+                0x000000002000004c                _impure_ptr
+ .data.impure_data
+                0x0000000020000050       0x60 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-impure.o)
+ *(.data_end .data_end.*)
+ .data_end      0x00000000200000b0        0x4 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+                0x00000000200000b4                . = ALIGN (0x4)
+                0x00000000200000b4                _edata = .
+                0x00000000200000b4                __data_end__ = .
+
+.igot.plt       0x00000000200000b4        0x0 load address 0x000000000800279c
+ .igot.plt      0x00000000200000b4        0x0 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o)
+
+.bss_CCMRAM     0x0000000010000000        0x0
+ *(.bss.CCMRAM .bss.CCMRAM.*)
+
+.bss            0x00000000200000b4       0xc4
+                0x00000000200000b4                __bss_start__ = .
+                0x00000000200000b4                _sbss = .
+ *(.bss_begin .bss_begin.*)
+ .bss_begin     0x00000000200000b4        0x4 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *(.bss .bss.*)
+ .bss.GPIO_InitStructure.6717
+                0x00000000200000b8        0x8 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .bss.USART_InitStructure.6716
+                0x00000000200000c0       0x18 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .bss.buf.5090  0x00000000200000d8       0x80 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .bss.current_heap_end.3898
+                0x0000000020000158        0x4 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .bss.hardwareInitialised.6767
+                0x000000002000015c        0x1 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x000000002000015d        0x3 
+ .bss.name.4206
+                0x0000000020000160        0x1 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ *fill*         0x0000000020000161        0x3 
+ .bss.timer_delayCount
+                0x0000000020000164        0x4 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .bss.__malloc_free_list
+                0x0000000020000168        0x4 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-mallocr.o)
+                0x0000000020000168                __malloc_free_list
+ .bss.__malloc_sbrk_start
+                0x000000002000016c        0x4 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-mallocr.o)
+                0x000000002000016c                __malloc_sbrk_start
+ *(COMMON)
+ COMMON         0x0000000020000170        0x4 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+                0x0000000020000170                errno
+ *(.bss_end .bss_end.*)
+ .bss_end       0x0000000020000174        0x4 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+                0x0000000020000178                . = ALIGN (0x4)
+                0x0000000020000178                __bss_end__ = .
+                0x0000000020000178                _ebss = .
+
+.noinit_CCMRAM
+ *(.noinit.CCMRAM .noinit.CCMRAM.*)
+
+.noinit         0x0000000020000178        0x0
+                0x0000000020000178                _noinit = .
+ *(.noinit .noinit.*)
+                0x0000000020000178                . = ALIGN (0x4)
+                0x0000000020000178                _end_noinit = .
+                [!provide]                        PROVIDE (end, _end_noinit)
+                [!provide]                        PROVIDE (_end, _end_noinit)
+                [!provide]                        PROVIDE (__end, _end_noinit)
+                [!provide]                        PROVIDE (__end__, _end_noinit)
+
+._check_stack   0x0000000020000178      0x100
+                0x0000000020000278                . = (. + _Minimum_Stack_Size)
+ *fill*         0x0000000020000178      0x100 
+
+.b1text
+ *(.b1text)
+ *(.b1rodata)
+ *(.b1rodata.*)
+
+.eb0text
+ *(.eb0text)
+ *(.eb0rodata)
+ *(.eb0rodata.*)
+
+.eb1text
+ *(.eb1text)
+ *(.eb1rodata)
+ *(.eb1rodata.*)
+
+.eb2text
+ *(.eb2text)
+ *(.eb2rodata)
+ *(.eb2rodata.*)
+
+.eb3text
+ *(.eb3text)
+ *(.eb3rodata)
+ *(.eb3rodata.*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x0000000000000000       0x1d
+ *(.comment)
+ .comment       0x0000000000000000       0x1d /tmp/ccPTv6Lu.ltrans0.ltrans.o
+                                         0x1e (size before relaxing)
+
+.ARM.attributes
+                0x0000000000000000       0x31
+ .ARM.attributes
+                0x0000000000000000       0x31 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .ARM.attributes
+                0x0000000000000031       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o)
+ .ARM.attributes
+                0x000000000000005f       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-impure.o)
+ .ARM.attributes
+                0x000000000000008d       0x17 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-strlen.o)
+ .ARM.attributes
+                0x00000000000000a4       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-vsnprintf.o)
+ .ARM.attributes
+                0x00000000000000d2       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o)
+ .ARM.attributes
+                0x0000000000000100       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-vfprintf_i.o)
+ .ARM.attributes
+                0x000000000000012e       0x1c /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memchr.o)
+ .ARM.attributes
+                0x000000000000014a       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memcpy-stub.o)
+ .ARM.attributes
+                0x0000000000000178       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memmove.o)
+ .ARM.attributes
+                0x00000000000001a6       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-freer.o)
+ .ARM.attributes
+                0x00000000000001d4       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-mallocr.o)
+ .ARM.attributes
+                0x0000000000000202       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-reallocr.o)
+ .ARM.attributes
+                0x0000000000000230       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-sbrkr.o)
+ .ARM.attributes
+                0x000000000000025e       0x2e /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-msizer.o)
+ .ARM.attributes
+                0x000000000000028c       0x1e /usr/lib/gcc/arm-none-eabi/6.2.0/armv7e-m/libgcc.a(_arm_addsubsf3.o)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x0000000000000000      0x220
+ *(.debug_aranges)
+ .debug_aranges
+                0x0000000000000000      0x220 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x0000000000000000     0x2d87
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x0000000000000000     0x2d87 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+
+.debug_abbrev   0x0000000000000000      0x4df
+ *(.debug_abbrev)
+ .debug_abbrev  0x0000000000000000      0x4df /tmp/ccPTv6Lu.ltrans0.ltrans.o
+
+.debug_line     0x0000000000000000      0xb0e
+ *(.debug_line)
+ .debug_line    0x0000000000000000      0xb0e /tmp/ccPTv6Lu.ltrans0.ltrans.o
+
+.debug_frame    0x0000000000000000      0x94c
+ *(.debug_frame)
+ .debug_frame   0x0000000000000000      0x674 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+ .debug_frame   0x0000000000000674       0x20 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-errno.o)
+ .debug_frame   0x0000000000000694       0x4c /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-vsnprintf.o)
+ .debug_frame   0x00000000000006e0       0x90 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-svfprintf.o)
+ .debug_frame   0x0000000000000770       0x60 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-vfprintf_i.o)
+ .debug_frame   0x00000000000007d0       0x28 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memcpy-stub.o)
+ .debug_frame   0x00000000000007f8       0x28 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-memmove.o)
+ .debug_frame   0x0000000000000820       0x2c /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-freer.o)
+ .debug_frame   0x000000000000084c       0x2c /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-mallocr.o)
+ .debug_frame   0x0000000000000878       0x3c /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-reallocr.o)
+ .debug_frame   0x00000000000008b4       0x2c /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-sbrkr.o)
+ .debug_frame   0x00000000000008e0       0x20 /usr/lib/gcc/arm-none-eabi/6.2.0/../../../../arm-none-eabi/lib/armv7e-m/libg_nano.a(lib_a-nano-msizer.o)
+ .debug_frame   0x0000000000000900       0x4c /usr/lib/gcc/arm-none-eabi/6.2.0/armv7e-m/libgcc.a(_arm_addsubsf3.o)
+
+.debug_str      0x0000000000000000     0x12d3
+ *(.debug_str)
+ .debug_str     0x0000000000000000     0x12d3 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+                                       0x1356 (size before relaxing)
+
+.debug_loc      0x0000000000000000     0x1f33
+ *(.debug_loc)
+ .debug_loc     0x0000000000000000     0x1f33 /tmp/ccPTv6Lu.ltrans0.ltrans.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+OUTPUT(ReadSensor2.elf elf32-littlearm)
+
+.debug_ranges   0x0000000000000000      0x398
+ .debug_ranges  0x0000000000000000      0x398 /tmp/ccPTv6Lu.ltrans0.ltrans.o
