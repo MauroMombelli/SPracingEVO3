@@ -2,67 +2,44 @@
 #include "stm32f30x_conf.h"
 #include "usart.h"
 
+static uint8_t min(const uint8_t a, const uint8_t b) {
+	return a < b ? a : b;
+}
+
 static void NVIC_Config(void) {
 	NVIC_InitTypeDef NVIC_InitStructure;
 
-	/* Enable the USART1 Interrupt */
+	// Enable the USART1 Interrupt
 	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 }
-/*
-static void USART_Config(void)
-{
-  USART_InitTypeDef USART_InitStructure;
-  GPIO_InitTypeDef GPIO_InitStructure;
 
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA , ENABLE);
+volatile uint8_t input[256], output[256], input_index, input_limit,
+		output_index, output_limit;
 
+void USART1_IRQHandler(void) {
 
-
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
-
-
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_7);
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_7);
-
-
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOC, &GPIO_InitStructure);
-
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOE, &GPIO_InitStructure);
-
-
-  USART_DeInit(USART1);
-  USART_InitStructure.USART_BaudRate = 9600;
-  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-  USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
-  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-  USART_Init(USART1, &USART_InitStructure);
-
-
-  USART_Cmd(USART1, ENABLE);
-
+	if (USART1->ISR & USART_ISR_RXNE) {
+		//ready to receive
+		input[input_limit++] = (uint8_t) USART_ReceiveData(USART1);
+	}
+	if (USART1->ISR & USART_FLAG_TXE) {
+		//ready to send
+		if (output_limit != output_index) {
+			USART_SendData(USART1, output[output_index++]);
+		} else {
+			USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
+		}
+	}
 }
-*/
 
 void USART1_Init(uint32_t speed) {
 	/*
-	USART_Config();
-	return;*/
+	 USART_Config();
+	 return;*/
 
 	static USART_InitTypeDef USART_InitStructure;
 	static GPIO_InitTypeDef GPIO_InitStructure;
@@ -83,21 +60,8 @@ void USART1_Init(uint32_t speed) {
 
 	/* NVIC configuration */
 	NVIC_Config();
-
-	USART_InitStructure.USART_BaudRate = speed;
-	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-	USART_InitStructure.USART_StopBits = USART_StopBits_1;
-	USART_InitStructure.USART_Parity = USART_Parity_No;
-	USART_InitStructure.USART_HardwareFlowControl =
-	USART_HardwareFlowControl_None;
-	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-
 	/* Enable GPIO clock */
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
-
-	USART_ClockInitTypeDef def_clock;
-	USART_ClockStructInit(&def_clock);
-	USART_ClockInit(USART1, &def_clock);
 
 	/* Enable USART clock */
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
@@ -120,11 +84,47 @@ void USART1_Init(uint32_t speed) {
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
+	USART_InitStructure.USART_BaudRate = speed;
+	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+	USART_InitStructure.USART_StopBits = USART_StopBits_1;
+	USART_InitStructure.USART_Parity = USART_Parity_No;
+	USART_InitStructure.USART_HardwareFlowControl =
+	USART_HardwareFlowControl_None;
+	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 	/* USART configuration */
 	USART_Init(USART1, &USART_InitStructure);
 
 	/* Enable USART */
 	USART_Cmd(USART1, ENABLE);
 
-	//USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+	//enable RX interrupt, disable TX interrupt
+	USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
+	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+}
+
+uint8_t USART1_Read(uint8_t * const ris, const uint8_t len) {
+	if (!len) {
+		return 0;
+	}
+	USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
+	uint8_t to_read = min(len, (uint8_t) (input_limit - input_index));
+	for (uint8_t i = 0; i < to_read; i++) {
+		ris[i] = input[input_index++];
+	}
+	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+
+	return to_read;
+}
+
+void USART1_Write(const void * const mess, const uint8_t len) {
+	if (!len) {
+		return;
+	}
+	uint8_t *p = (uint8_t*) mess;
+	USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
+	for (uint8_t i = 0; i < len; i++) {
+		output[output_limit] = p[i];
+		output_limit++;
+	}
+	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 }

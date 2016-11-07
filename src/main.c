@@ -48,17 +48,34 @@
 
 // ----- main() ---------------------------------------------------------------
 
-// Sample pragmas to cope with warnings. Please note the related line at
-// the end of this function, used to pop the compiler diagnostics status.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#pragma GCC diagnostic ignored "-Wmissing-declarations"
-#pragma GCC diagnostic ignored "-Wreturn-type"
+#include "string.h"
 
 #include "gyro.h"
+#include "acce.h"
+#include "temperature.h"
 #include "serial/usart.h"
 
+#define AIRCR_VECTKEY_MASK    ((uint32_t)0x05FA0000)
+
+void systemReset(void){
+    // Generate system reset
+    SCB->AIRCR = AIRCR_VECTKEY_MASK | (uint32_t)0x04;
+}
+
+void systemResetToBootloader(void) {
+	// 1FFFF000 -> 20000200 -> SP
+	// 1FFFF004 -> 1FFFF021 -> PC
+
+	*((uint32_t *) 0x20009FFC) = 0xDEADBEEF; // 40KB SRAM STM32F30X
+
+	systemReset();
+	//NVIC_SystemReset();
+}
+
 int main(int argc, char* argv[]) {
+	(void) argc;
+	(void) argv;
+
 	// Send a greeting to the trace device (skipped on Release).
 	trace_puts("Hello ARM World!");
 
@@ -70,84 +87,132 @@ int main(int argc, char* argv[]) {
 
 	USART1_Init(115200);
 
+	USART1_Write("START1\n", 7);
+
 	blink_led_init();
 
-	if (gyro_init()) {
+	USART1_Write("START2\n", 7);
+
+	uint8_t ris = gyro_init();
+	if (ris) {
 		while (1) {
-			USART_SendData(USART1, 'F');
-			/* Check the Transfer Complete Flag */
-			while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET) {
-			}
+			USART1_Write(&ris, 1);
+			USART1_Write(" WRONG\n", 7);
 		}
 	}
+	USART1_Write(&ris, 1);
+	USART1_Write(" OK\n", 4);
 
-	uint32_t seconds = 0;
-
-	USART_SendData(USART1, (uint8_t) 'a');
+	USART1_Write("GYRO OK\n", 8);
 
 	// Infinite loop
 	while (1) {
-		blink_led_on();
-		timer_sleep(1000);
 
-		blink_led_off();
-		timer_sleep(1000);
+		uint32_t time = micros();
 
-		++seconds;
+		//blink_led_on();
+		//timer_sleep(1000);
 
-		// Count seconds on the trace device.
-		//printf("Second %ld\n", seconds);
+		//blink_led_off();
+		//timer_sleep(1000);
 
-		struct gyro_data gyro;
-		if (gyro_get_data(&gyro)) {
+		uint8_t b[100];
 
-			USART_SendData(USART1, 'a');
-			/* Check the Transfer Complete Flag */
-			while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET) {
+		uint8_t len = USART1_Read(b, sizeof(b));
+
+		for (uint8_t i = 0; i < len; i++) {
+			if (b[i] == 'R') {
+				systemResetToBootloader();
 			}
-			USART_SendData(USART1, 'a');
-			/* Check the Transfer Complete Flag */
-			while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET) {
+		}
+
+		USART1_Write(b, len);
+
+		static uint32_t last = 0;
+		static uint32_t readSec = 0, readErr = 0, readWait = 0;
+
+		if (time - last >= 1000000) {
+			last = time;
+			char buffer [33];
+
+			itoa((int)readSec, buffer, 10);
+			USART1_Write(buffer, (uint8_t)strlen(buffer) );
+
+			USART1_Write(" ", 1);
+
+			itoa((int)readErr, buffer, 10);
+			USART1_Write(buffer, (uint8_t)strlen(buffer) );
+
+			USART1_Write(" ", 1);
+
+			itoa((int)readWait, buffer, 10);
+			USART1_Write(buffer, (uint8_t)strlen(buffer) );
+
+			USART1_Write(" ", 1);
+
+			itoa((int)time, buffer, 10 );
+			USART1_Write(buffer, (uint8_t)strlen(buffer));
+
+			USART1_Write(" alive\n", 7);
+			readSec = readErr = readWait = 0;
+		}
+
+
+/*
+		struct vector3f gyro, acce;
+		float temp;
+*/
+		ris = gyro_update( time );
+
+		if (!ris) {
+			readSec++;
+/*
+			gyro_get_data(&gyro);
+
+			acce_get_data(&acce);
+
+			temp_get_data(&temp);
+
+			int t;
+
+			USART1_Write("GG", 2);
+			t = abs(gyro.x);
+			USART1_Write(&t, 2);
+
+			t = abs(gyro.y);
+			USART1_Write(&t, 2);
+
+			t = abs(gyro.z);
+			USART1_Write(&t, 2);
+
+			USART1_Write("AA", 2);
+			t = abs(acce.x);
+			USART1_Write(&t, 2);
+
+			t = abs(acce.y);
+			USART1_Write(&t, 2);
+
+			t = abs(acce.z);
+			USART1_Write(&t, 2);
+*/
+			//USART1_Write("r\n", 2);
+		} else {
+			if (ris != 1){
+				ris = (uint8_t) (ris + '0');//readable ascii
+				USART1_Write(&ris, 1);
+				USART1_Write(" ERROR\n", 7);
+				readErr++;
+			}else{
+				//USART1_Write("NR\n", 3);
+				readWait++;
 			}
 
-			union {
-				float f;
-				uint8_t raw[4];
-			} tmp;
-
-			tmp.f = gyro.x;
-			for (uint8_t i = 0; i < 4; i++) {
-				USART_SendData(USART1, tmp.raw[i]);
-				/* Check the Transfer Complete Flag */
-				while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET) {
-				}
-			}
-
-			tmp.f = gyro.y;
-			for (uint8_t i = 0; i < 4; i++) {
-				USART_SendData(USART1, tmp.raw[i]);
-				/* Check the Transfer Complete Flag */
-				while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET) {
-				}
-			}
-
-			tmp.f = gyro.z;
-			for (uint8_t i = 0; i < 4; i++) {
-				USART_SendData(USART1, tmp.raw[i]);
-				/* Check the Transfer Complete Flag */
-				while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET) {
-				}
-			}
-			/* Check the Transfer Complete Flag */
-			while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET) {
-			}
-			USART_SendData(USART1, '\n');
 		}
 
 	}
-	// Infinite loop, never return.
-}
 
-#pragma GCC diagnostic pop
+// Infinite loop, never return.
+	return -1;
+}
 
 // ----------------------------------------------------------------------------

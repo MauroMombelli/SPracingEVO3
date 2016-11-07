@@ -22,6 +22,9 @@ timer_start (void);
 extern void
 timer_sleep (timer_ticks_t ticks);
 
+uint32_t millis(void);
+uint32_t micros(void);
+
 // ----------------------------------------------------------------------------
 
 #endif // TIMER_H_

@@ -8,15 +8,11 @@
 #ifndef GYRO_H_
 #define GYRO_H_
 
+#include "vector3f.h"
 
-struct gyro_data{
-	float x; // radians/s
-	float y; // radians/s
-	float z; // radians/s
-};
-
-bool gyro_init(void);
-bool gyro_get_data(struct gyro_data * const ris);
+uint8_t gyro_init(void);
+uint8_t gyro_update(const uint32_t time);
+uint8_t gyro_get_data(struct vector3f * const ris);
 
 
 #endif /* GYRO_H_ */

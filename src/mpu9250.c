@@ -5,9 +5,12 @@
 
 #include "spi.h"
 #include "Timer.h"
+
+/*public interface*/
 #include "gyro.h"
 #include "acce.h"
 #include "magn.h"
+#include "temperature.h"
 
 #define MPU_RA_WHO_AM_I 0x75
 
@@ -137,11 +140,6 @@ bool mpu6500ReadRegister(uint8_t reg, uint8_t length, uint8_t *data) {
 }
 
 void mpu6500InitHw(void) {
-	static bool hardwareInitialised = false;
-
-	if (hardwareInitialised) {
-		return;
-	}
 
 	RCC_AHBPeriphClockCmd(MPU6500_CS_GPIO_CLK_PERIPHERAL, ENABLE);
 
@@ -158,81 +156,167 @@ void mpu6500InitHw(void) {
 
 	spiSetDivisor(MPU6500_SPI_INSTANCE, SPI_9MHZ_CLOCK_DIVIDER);
 
-	hardwareInitialised = true;
-
 }
 
 enum clock_sel_e {
-    INV_CLK_INTERNAL = 0,
-    INV_CLK_PLL,
-    NUM_CLK
+	INV_CLK_INTERNAL = 0, INV_CLK_PLL, NUM_CLK
 };
 
 enum gyro_fsr_e {
-    INV_FSR_250DPS = 0,
-    INV_FSR_500DPS,
-    INV_FSR_1000DPS,
-    INV_FSR_2000DPS,
-    NUM_GYRO_FSR
+	INV_FSR_250DPS = 0,
+	INV_FSR_500DPS,
+	INV_FSR_1000DPS,
+	INV_FSR_2000DPS,
+	NUM_GYRO_FSR
 };
 
 enum accel_fsr_e {
-    INV_FSR_2G = 0,
-    INV_FSR_4G,
-    INV_FSR_8G,
-    INV_FSR_16G,
-    NUM_ACCEL_FSR
+	INV_FSR_2G = 0, INV_FSR_4G, INV_FSR_8G, INV_FSR_16G, NUM_ACCEL_FSR
 };
 
 #define MPU6500_BIT_RESET                   (0x80)
 
-void mpu6500InitLogic(void){
-    //mpuIntExtiInit(); //hw for interrupt
+void mpu6500InitLogic(void) {
+	//mpuIntExtiInit(); //hw for interrupt
 
-    mpu6500WriteRegister(MPU_RA_PWR_MGMT_1, MPU6500_BIT_RESET);
-    timer_sleep(100);
-    mpu6500WriteRegister(MPU_RA_SIGNAL_PATH_RESET, 0x07);
+	ENABLE_MPU6500;
 
-    mpu6500WriteRegister(MPU_RA_PWR_MGMT_1, 0);
+	mpu6500WriteRegister(MPU_RA_PWR_MGMT_1, MPU6500_BIT_RESET);
+	timer_sleep(100);
+	mpu6500WriteRegister(MPU_RA_SIGNAL_PATH_RESET, 0x07);
+	timer_sleep(100);
+	mpu6500WriteRegister(MPU_RA_PWR_MGMT_1, 0);
+	timer_sleep(100);
+	mpu6500WriteRegister(MPU_RA_GYRO_CONFIG, INV_FSR_2000DPS << 3 | 1); //3 == use FsChose to set Bandwidth
+	mpu6500WriteRegister(MPU_RA_ACCEL_CONFIG, INV_FSR_8G << 3);
+	mpu6500WriteRegister(MPU_RA_FF_THR, 0); //4000Hz ODR acce
+	mpu6500WriteRegister(MPU_RA_CONFIG, 7); //7 == 3600Hz gyro
+	mpu6500WriteRegister(MPU_RA_SMPLRT_DIV, 0); // set Divider to 0
+	timer_sleep(15);
 
-    mpu6500WriteRegister(MPU_RA_PWR_MGMT_1, INV_CLK_PLL);
-    mpu6500WriteRegister(MPU_RA_GYRO_CONFIG, INV_FSR_2000DPS << 3);
-    mpu6500WriteRegister(MPU_RA_ACCEL_CONFIG, INV_FSR_8G << 3);
-    mpu6500WriteRegister(MPU_RA_CONFIG, 0);
-    mpu6500WriteRegister(MPU_RA_SMPLRT_DIV, 0 ); // set Divider
-    timer_sleep(15);
+	// Data ready interrupt configuration
+	mpu6500WriteRegister(MPU_RA_INT_PIN_CFG,
+			0 << 7 | 0 << 6 | 0 << 5 | 1 << 4 | 0 << 3 | 0 << 2 | 1 << 1
+					| 0 << 0);  // INT_ANYRD_2CLEAR, BYPASS_EN
 
-    // Data ready interrupt configuration
-    mpu6500WriteRegister(MPU_RA_INT_PIN_CFG, 0 << 7 | 0 << 6 | 0 << 5 | 1 << 4 | 0 << 3 | 0 << 2 | 1 << 1 | 0 << 0);  // INT_ANYRD_2CLEAR, BYPASS_EN
+	mpu6500WriteRegister(MPU_RA_INT_ENABLE, 0x01); // RAW_RDY_EN interrupt enable
 
-    mpu6500WriteRegister(MPU_RA_INT_ENABLE, 0x01); // RAW_RDY_EN interrupt enable
+	DISABLE_MPU6500;
 }
 
 #define MPU9250_WHO_AM_I_CONST (0x71)
 
-bool gyro_init(void) {
-	mpu6500InitHw();
+struct vector3f gyro, acce;
+float temp = 0;
 
-	mpu6500InitLogic();
+uint8_t init(void) {
+	static bool hardwareInitialised = false;
 
-	uint8_t response_who;
-	mpu6500ReadRegister(MPU_RA_WHO_AM_I, 1, &response_who);
+	if (!hardwareInitialised) {
+		SPI_Config();
 
-	return response_who == MPU9250_WHO_AM_I_CONST;
-}
+		mpu6500InitHw();
 
-bool gyro_get_data(struct gyro_data * const ris) {
-	uint8_t data[6];
+		mpu6500InitLogic();
 
-	const uint8_t gyroFirstMeasurementRegister = 0x43;
-	bool ack = mpu6500ReadRegister(gyroFirstMeasurementRegister, 6, data);
-	if (!ack) {
-		return false;
+		hardwareInitialised = true;
 	}
 
-	ris->x = (int16_t) ((data[0] << 8) | data[1]);
-	ris->y = (int16_t) ((data[2] << 8) | data[3]);
-	ris->z = (int16_t) ((data[4] << 8) | data[5]);
+	uint8_t response_who;
+	bool ack = mpu6500ReadRegister(MPU_RA_WHO_AM_I, 1, &response_who);
+	if (!ack) {
+		return 2;
+	}
+
+	return !(response_who == MPU9250_WHO_AM_I_CONST);
+}
+
+uint8_t temp_init(void) {
+	return init();
+}
+
+uint8_t acce_init(void) {
+	return init();
+}
+
+uint8_t gyro_init(void) {
+	return init();
+}
+
+uint8_t update(const uint32_t time_us) {
+	static uint32_t lastUpdate = 0;
+
+	if (time_us - lastUpdate < 1000000) {
+		return 1;
+	}
+	lastUpdate = time_us;
+
+
+
+	uint8_t data[6];
+	bool ack;
+/*
+	const uint8_t firstRegisterAcce = MPU_RA_ACCEL_XOUT_H; //0x3B to 0x40 is accel, 41 and 42 temp, 43 to 48 gyro
+	ack = mpu6500ReadRegister(firstRegisterAcce, 6, data);
+
+	if (!ack) {
+		return 2;
+	}
+
+	acce.x = (int16_t) ((data[0] << 8) | data[1]);
+	acce.y = (int16_t) ((data[2] << 8) | data[3]);
+	acce.z = (int16_t) ((data[4] << 8) | data[5]);
+
+
+	offset = 6;
+	int16_t temp_tmp = (int16_t) ((data[0 + offset] << 8) | data[1 + offset]);
+	temp = temp_tmp;
+*/
+	const uint8_t firstRegisterGyro = MPU_RA_GYRO_XOUT_H; //0x3B to 0x40 is accel, 41 and 42 temp, 43 to 48 gyro
+	ack = mpu6500ReadRegister(firstRegisterGyro, 6, data);
+
+	if (!ack) {
+		return 3;
+	}
+	gyro.x = (int16_t) ((data[0] << 8) | data[1]);
+	gyro.y = (int16_t) ((data[2] << 8) | data[3]);
+	gyro.z = (int16_t) ((data[4] << 8) | data[5]);
+
+	return 0;
+}
+
+uint8_t temp_update(const uint16_t time) {
+	return update(time);
+}
+
+uint8_t acce_update(const uint16_t time) {
+	return update(time);
+}
+
+uint8_t gyro_update(const uint32_t time_us) {
+	return update(time_us);
+}
+
+uint8_t temp_get_data(float *ris) {
+	*ris = temp;
 
 	return true;
+}
+
+uint8_t acce_get_data(struct vector3f * const ris) {
+
+	ris->x = acce.x;
+	ris->y = acce.y;
+	ris->z = acce.z;
+
+	return 0;
+}
+
+uint8_t gyro_get_data(struct vector3f * const ris) {
+
+	ris->x = gyro.x;
+	ris->y = gyro.y;
+	ris->z = gyro.z;
+
+	return 0;
 }
