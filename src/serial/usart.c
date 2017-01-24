@@ -36,13 +36,10 @@ void USART1_IRQHandler(void) {
 	}
 }
 
-void USART1_Init(uint32_t speed) {
-	/*
-	 USART_Config();
-	 return;*/
+void USART1_Init(const uint32_t speed) {
 
-	static USART_InitTypeDef USART_InitStructure;
-	static GPIO_InitTypeDef GPIO_InitStructure;
+	USART_InitTypeDef USART_InitStructure;
+	GPIO_InitTypeDef GPIO_InitStructure;
 	/*!< At this stage the microcontroller clock setting is already configured,
 	 this is done through SystemInit() function which is called from startup
 	 file (startup_stm32f37x.s) before to branch to application main.

@@ -12,6 +12,10 @@
 #include "magn.h"
 #include "temperature.h"
 
+/* debug with blink xD */
+#include "BlinkLed.h"
+#include "serial/usart.h"
+
 #define MPU_RA_WHO_AM_I 0x75
 
 #define MPU_RA_XG_OFFS_TC       0x00    //[7] PWR_MODE, [6:1] XG_OFFS_TC, [0] OTP_BNK_VLD
@@ -114,29 +118,91 @@
 #define SPI_9MHZ_CLOCK_DIVIDER      4
 
 bool mpu6500WriteRegister(uint8_t reg, uint8_t data);
-bool mpu6500ReadRegister(uint8_t reg, uint8_t length, uint8_t *data);
+uint8_t mpu6500ReadRegister(uint8_t reg, uint8_t length, uint8_t *data);
 void mpu6500InitHw(void);
 void mpu6500InitLogic(void);
-//void mpuIntExtiInit(void);
+void mpuIntExtiInit(void);
+
+volatile int data_is_ready = 0;
+volatile int data_read = 0;
+
+/* Handle PC13 interrupt */
+void EXTI15_10_IRQHandler(void) {
+	/* Make sure that interrupt flag is set */
+	if (EXTI_GetITStatus(EXTI_Line13) != RESET) {
+		data_is_ready = 1;
+
+		data_read++;
+
+		/* Clear interrupt flag */
+		EXTI_ClearITPendingBit(EXTI_Line13);
+	}
+
+}
+
+void mpuIntExtiInit(void) {
+
+	//RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
+	USART1_Write("T1\n", 3);
+
+	GPIO_InitTypeDef GPIO_InitStructure;
+	//GPIO_StructInit(&GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+
+	GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+	USART1_Write("T2\n", 3);
+
+	const uint32_t line = EXTI_Line13;
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOC, EXTI_PinSource13);
+
+	USART1_Write("T3\n", 3);
+
+	EXTI_InitTypeDef EXTIInit;
+	EXTIInit.EXTI_Line = line;
+	EXTIInit.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTIInit.EXTI_Trigger = EXTI_Trigger_Rising;
+	EXTIInit.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTIInit);
+
+	USART1_Write("T4\n", 3);
+
+	NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x01;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+
+	USART1_Write("T5\n", 3);
+}
 
 bool mpu6500WriteRegister(uint8_t reg, uint8_t data) {
 	ENABLE_MPU6500;
-	spiTransferByte(MPU6500_SPI_INSTANCE, reg);
-	spiTransferByte(MPU6500_SPI_INSTANCE, data);
+	spiTransferByte(MPU6500_SPI_INSTANCE, &reg);
+	spiTransferByte(MPU6500_SPI_INSTANCE, &data);
 	DISABLE_MPU6500;
 
 	return true;
 }
 
-bool mpu6500ReadRegister(uint8_t reg, uint8_t length, uint8_t *data) {
-	uint8_t risLen;
+uint8_t mpu6500ReadRegister(uint8_t reg, uint8_t length, uint8_t *data) {
+	uint8_t readReg = reg | 0x80;
 	ENABLE_MPU6500;
-	spiTransferByte(MPU6500_SPI_INSTANCE, reg | 0x80); // read transaction
-	spiTransfer(MPU6500_SPI_INSTANCE, data, &risLen, length);
+	uint8_t status = spiTransferByte(MPU6500_SPI_INSTANCE, &readReg); // read transaction
+	if (status) {
+		return status;
+	}
+	spiTransfer(MPU6500_SPI_INSTANCE, data, 0, length);
+	if (status) {
+		return status;
+	}
 	DISABLE_MPU6500;
-	if (risLen < length)
-		return false;
-	return true;
+	return 0;
 }
 
 void mpu6500InitHw(void) {
@@ -154,7 +220,7 @@ void mpu6500InitHw(void) {
 
 	GPIO_SetBits(MPU6500_CS_GPIO, MPU6500_CS_PIN);
 
-	spiSetDivisor(MPU6500_SPI_INSTANCE, SPI_9MHZ_CLOCK_DIVIDER);
+	spiSetDivisor(MPU6500_SPI_INSTANCE, 2);
 
 }
 
@@ -177,31 +243,42 @@ enum accel_fsr_e {
 #define MPU6500_BIT_RESET                   (0x80)
 
 void mpu6500InitLogic(void) {
-	//mpuIntExtiInit(); //hw for interrupt
+//mpuIntExtiInit(); //hw for interrupt
 
-	ENABLE_MPU6500;
 
 	mpu6500WriteRegister(MPU_RA_PWR_MGMT_1, MPU6500_BIT_RESET);
+
+	/*
+	while (i2cRead(MPU6500_ADDRESS, MPU6500_PWR_MGMT_1) & (1 << 7)) {
+	        // Wait for the bit to clear
+	};
+	*/
 	timer_sleep(100);
+
 	mpu6500WriteRegister(MPU_RA_SIGNAL_PATH_RESET, 0x07);
+	mpu6500WriteRegister(MPU_RA_USER_CTRL, 0x01);
+
 	timer_sleep(100);
-	mpu6500WriteRegister(MPU_RA_PWR_MGMT_1, 0);
+	mpu6500WriteRegister(MPU_RA_PWR_MGMT_1, 0x0); //0x10 == gyro disabled
 	timer_sleep(100);
-	mpu6500WriteRegister(MPU_RA_GYRO_CONFIG, INV_FSR_2000DPS << 3 | 1); //3 == use FsChose to set Bandwidth
+	/*
 	mpu6500WriteRegister(MPU_RA_ACCEL_CONFIG, INV_FSR_8G << 3);
-	mpu6500WriteRegister(MPU_RA_FF_THR, 0); //4000Hz ODR acce
-	mpu6500WriteRegister(MPU_RA_CONFIG, 7); //7 == 3600Hz gyro
-	mpu6500WriteRegister(MPU_RA_SMPLRT_DIV, 0); // set Divider to 0
+	*/
+	mpu6500WriteRegister(MPU_RA_CONFIG, 7 ); //7 == 8000Hz gyro, * == 1kHz. SPECIAL CASE: MPU_RA_GYRO_CONFIG == 1, 2, or 3 == 32kHz
+	mpu6500WriteRegister(MPU_RA_GYRO_CONFIG, (INV_FSR_500DPS << 3)); //3 == use FsChose to set Bandwidth
+	mpu6500WriteRegister(MPU_RA_FF_THR, 8); //8 == 4kHz
+
+	//mpu6500WriteRegister(MPU_RA_SMPLRT_DIV, 0); // set Divider to 0
+
+	//mpu6500WriteRegister(MPU_RA_FIFO_EN, 0x78); //enable FIFO for gyro and acce XYZ
+
 	timer_sleep(15);
 
-	// Data ready interrupt configuration
-	mpu6500WriteRegister(MPU_RA_INT_PIN_CFG,
-			0 << 7 | 0 << 6 | 0 << 5 | 1 << 4 | 0 << 3 | 0 << 2 | 1 << 1
-					| 0 << 0);  // INT_ANYRD_2CLEAR, BYPASS_EN
+// Data ready interrupt configuration
+
+	mpu6500WriteRegister(MPU_RA_INT_PIN_CFG, 0 << 7 | 0 << 6 | 0 << 5 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 0 << 0); // INT_ANYRD_2CLEAR, BYPASS_EN
 
 	mpu6500WriteRegister(MPU_RA_INT_ENABLE, 0x01); // RAW_RDY_EN interrupt enable
-
-	DISABLE_MPU6500;
 }
 
 #define MPU9250_WHO_AM_I_CONST (0x71)
@@ -211,6 +288,8 @@ float temp = 0;
 
 uint8_t init(void) {
 	static bool hardwareInitialised = false;
+
+	mpuIntExtiInit();
 
 	if (!hardwareInitialised) {
 		SPI_Config();
@@ -223,12 +302,12 @@ uint8_t init(void) {
 	}
 
 	uint8_t response_who;
-	bool ack = mpu6500ReadRegister(MPU_RA_WHO_AM_I, 1, &response_who);
-	if (!ack) {
-		return 2;
+	uint8_t ack = mpu6500ReadRegister(MPU_RA_WHO_AM_I, 1, &response_who);
+	if (ack == 0) {
+		return !(response_who == MPU9250_WHO_AM_I_CONST);
 	}
 
-	return !(response_who == MPU9250_WHO_AM_I_CONST);
+	return (uint8_t) (ack + 1);
 }
 
 uint8_t temp_init(void) {
@@ -244,43 +323,57 @@ uint8_t gyro_init(void) {
 }
 
 uint8_t update(const uint32_t time_us) {
-	static uint32_t lastUpdate = 0;
+	(void) time_us;
+	/*
+	 static uint32_t lastUpdate = 0;
 
-	if (time_us - lastUpdate < 1000000) {
+	 if (time_us - lastUpdate < (1000000/4000) ) {
+	 return 1;
+	 }
+	 lastUpdate = time_us;
+	 */
+	if (!data_is_ready) {
 		return 1;
 	}
-	lastUpdate = time_us;
-
-
 
 	uint8_t data[6];
-	bool ack;
-/*
+	uint8_t ack;
+
 	const uint8_t firstRegisterAcce = MPU_RA_ACCEL_XOUT_H; //0x3B to 0x40 is accel, 41 and 42 temp, 43 to 48 gyro
 	ack = mpu6500ReadRegister(firstRegisterAcce, 6, data);
 
-	if (!ack) {
-		return 2;
+	if (ack) {
+		USART1_Write("ACCNOT\n", 7);
+		//return 2;
+	}else{
+
+		acce.x = (int16_t) ((data[0] << 8) | data[1]);
+		acce.y = (int16_t) ((data[2] << 8) | data[3]);
+		acce.z = (int16_t) ((data[4] << 8) | data[5]);
 	}
 
-	acce.x = (int16_t) ((data[0] << 8) | data[1]);
-	acce.y = (int16_t) ((data[2] << 8) | data[3]);
-	acce.z = (int16_t) ((data[4] << 8) | data[5]);
-
-
-	offset = 6;
-	int16_t temp_tmp = (int16_t) ((data[0 + offset] << 8) | data[1 + offset]);
-	temp = temp_tmp;
-*/
+	/*
+	 offset = 6;
+	 int16_t temp_tmp = (int16_t) ((data[0 + offset] << 8) | data[1 + offset]);
+	 temp = temp_tmp;
+	 */
 	const uint8_t firstRegisterGyro = MPU_RA_GYRO_XOUT_H; //0x3B to 0x40 is accel, 41 and 42 temp, 43 to 48 gyro
+
 	ack = mpu6500ReadRegister(firstRegisterGyro, 6, data);
 
-	if (!ack) {
-		return 3;
+	if (ack) {
+		USART1_Write("GIRNOT\n", 7);
+		//return ack;
+	}else{
+		gyro.x = (int16_t) ((data[0] << 8) | data[1]);
+		gyro.y = (int16_t) ((data[2] << 8) | data[3]);
+		gyro.z = (int16_t) ((data[4] << 8) | data[5]);
 	}
-	gyro.x = (int16_t) ((data[0] << 8) | data[1]);
-	gyro.y = (int16_t) ((data[2] << 8) | data[3]);
-	gyro.z = (int16_t) ((data[4] << 8) | data[5]);
+
+	//read status to reenable the interrupt
+	ack = mpu6500ReadRegister(MPU_RA_INT_STATUS, 1, data);
+
+	data_is_ready = 0;
 
 	return 0;
 }

@@ -73,23 +73,24 @@ void SPI_Config(void) {
 	GPIO_SetBits(SPI1_GPIO, SPI1_NSS_PIN);
 }
 
-uint8_t spiTransferByte(SPI_TypeDef *instance, uint8_t data){
+uint8_t spiTransferByte(SPI_TypeDef *instance, uint8_t *data){
     uint16_t spiTimeout = 1000;
 
     while (SPI_I2S_GetFlagStatus(instance, SPI_I2S_FLAG_TXE) == RESET) {
         if ((spiTimeout--) == 0)
-            break;
+            return 3;
     }
 
-    SPI_SendData8(instance, data);
+    SPI_SendData8(instance, *data);
 
     spiTimeout = 1000;
     while (SPI_I2S_GetFlagStatus(instance, SPI_I2S_FLAG_RXNE) == RESET){
         if ((spiTimeout--) == 0)
-            break;
+            return 2;
     }
 
-    return ((uint8_t)SPI_ReceiveData8(instance));
+    *data = SPI_ReceiveData8(instance);
+    return 0;
 }
 
 /**
@@ -111,7 +112,7 @@ void spiTransfer(SPI_TypeDef *instance, uint8_t *out, const uint8_t *in, int len
                 break;
         }
         SPI_SendData8(instance, b);
-        spiTimeout = 1000;
+        spiTimeout = 10000;
         while (SPI_I2S_GetFlagStatus(instance, SPI_I2S_FLAG_RXNE) == RESET) {
             if ((spiTimeout--) == 0)
                 break;

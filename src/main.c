@@ -57,9 +57,11 @@
 
 #define AIRCR_VECTKEY_MASK    ((uint32_t)0x05FA0000)
 
-void systemReset(void){
-    // Generate system reset
-    SCB->AIRCR = AIRCR_VECTKEY_MASK | (uint32_t)0x04;
+volatile int data_is_int = 0;
+
+void systemReset(void) {
+	// Generate system reset
+	SCB->AIRCR = AIRCR_VECTKEY_MASK | (uint32_t) 0x04;
 }
 
 void systemResetToBootloader(void) {
@@ -70,6 +72,42 @@ void systemResetToBootloader(void) {
 
 	systemReset();
 	//NVIC_SystemReset();
+}
+
+void tmp(void) {
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+
+	USART1_Write("T1\n", 3);
+
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_StructInit(&GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+
+	USART1_Write("TB\n", 3);
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	USART1_Write("T2\n", 3);
+
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource1);
+	USART1_Write("T3\n", 3);
+
+	EXTI_InitTypeDef EXTIInit;
+	EXTI_StructInit(&EXTIInit);
+	EXTIInit.EXTI_Line = EXTI_Line1;
+	EXTIInit.EXTI_Mode = EXTI_Mode_Interrupt;
+	EXTIInit.EXTI_Trigger = EXTI_Trigger_Rising;
+	EXTIInit.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&EXTIInit);
+	USART1_Write("T4\n", 3);
+
+	NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x01;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+	USART1_Write("T4\n", 3);
 }
 
 int main(int argc, char* argv[]) {
@@ -83,6 +121,8 @@ int main(int argc, char* argv[]) {
 	// at high speed.
 	trace_printf("System clock: %u Hz\n", SystemCoreClock);
 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+
 	timer_start();
 
 	USART1_Init(115200);
@@ -93,14 +133,19 @@ int main(int argc, char* argv[]) {
 
 	USART1_Write("START2\n", 7);
 
-	uint8_t ris = gyro_init();
-	if (ris) {
+	//tmp();
+
+	USART1_Write("T5\n", 3);
+
+	uint8_t error_number = gyro_init();
+	if (error_number) {
+		error_number = (uint8_t) (error_number + '0');
 		while (1) {
-			USART1_Write(&ris, 1);
+			USART1_Write(&error_number, 1);
 			USART1_Write(" WRONG\n", 7);
 		}
 	}
-	USART1_Write(&ris, 1);
+	USART1_Write(&error_number, 1);
 	USART1_Write(" OK\n", 4);
 
 	USART1_Write("GYRO OK\n", 8);
@@ -131,78 +176,99 @@ int main(int argc, char* argv[]) {
 		static uint32_t last = 0;
 		static uint32_t readSec = 0, readErr = 0, readWait = 0;
 
+		//last = time;
 		if (time - last >= 1000000) {
 			last = time;
-			char buffer [33];
+			char buffer[33];
 
-			itoa((int)readSec, buffer, 10);
-			USART1_Write(buffer, (uint8_t)strlen(buffer) );
-
-			USART1_Write(" ", 1);
-
-			itoa((int)readErr, buffer, 10);
-			USART1_Write(buffer, (uint8_t)strlen(buffer) );
+			extern volatile int data_read;
+			itoa((int) data_read, buffer, 10);
+			data_read = 0;
+			USART1_Write(buffer, (uint8_t) strlen(buffer));
 
 			USART1_Write(" ", 1);
 
-			itoa((int)readWait, buffer, 10);
-			USART1_Write(buffer, (uint8_t)strlen(buffer) );
+			itoa((int) readSec, buffer, 10);
+			USART1_Write(buffer, (uint8_t) strlen(buffer));
 
 			USART1_Write(" ", 1);
 
-			itoa((int)time, buffer, 10 );
-			USART1_Write(buffer, (uint8_t)strlen(buffer));
+			itoa((int) readErr, buffer, 10);
+			USART1_Write(buffer, (uint8_t) strlen(buffer));
+
+			USART1_Write(" ", 1);
+
+			itoa((int) readWait, buffer, 10);
+			USART1_Write(buffer, (uint8_t) strlen(buffer));
+
+			USART1_Write(" ", 1);
+
+			itoa((int) time, buffer, 10);
+			USART1_Write(buffer, (uint8_t) strlen(buffer));
 
 			USART1_Write(" alive\n", 7);
 			readSec = readErr = readWait = 0;
+			/*
+			 static int a = 0;
+			 if (a) {
+			 GPIO_SetBits(GPIOB, GPIO_Pin_1);
+			 a = 0;
+			 } else {
+			 GPIO_ResetBits(GPIOB, GPIO_Pin_1);
+			 a = 1;
+			 }
+			 */
 		}
+		/*
+		 struct vector3f gyro, acce;
+		 float temp;
+		 */
+		error_number = gyro_update(time);
 
-
-/*
-		struct vector3f gyro, acce;
-		float temp;
-*/
-		ris = gyro_update( time );
-
-		if (!ris) {
+		if (error_number == 0) {
 			readSec++;
-/*
+
+			struct vector3f gyro, acce;
+
 			gyro_get_data(&gyro);
 
 			acce_get_data(&acce);
 
-			temp_get_data(&temp);
+//			temp_get_data(&temp);
+			/*
+			 int t;
 
-			int t;
+			 USART1_Write("GG", 2);
+			 t = abs(gyro.x);
+			 USART1_Write(&t, 2);
 
-			USART1_Write("GG", 2);
-			t = abs(gyro.x);
-			USART1_Write(&t, 2);
+			 t = abs(gyro.y);
+			 USART1_Write(&t, 2);
 
-			t = abs(gyro.y);
-			USART1_Write(&t, 2);
+			 t = abs(gyro.z);
+			 USART1_Write(&t, 2);
 
-			t = abs(gyro.z);
-			USART1_Write(&t, 2);
+			 USART1_Write("\n", 1);
+			 */
+			/*
+			 USART1_Write("AA", 2);
+			 t = abs(acce.x);
+			 USART1_Write(&t, 2);
 
-			USART1_Write("AA", 2);
-			t = abs(acce.x);
-			USART1_Write(&t, 2);
+			 t = abs(acce.y);
+			 USART1_Write(&t, 2);
 
-			t = abs(acce.y);
-			USART1_Write(&t, 2);
-
-			t = abs(acce.z);
-			USART1_Write(&t, 2);
-*/
+			 t = abs(acce.z);
+			 USART1_Write(&t, 2);
+			 */
 			//USART1_Write("r\n", 2);
 		} else {
-			if (ris != 1){
-				ris = (uint8_t) (ris + '0');//readable ascii
-				USART1_Write(&ris, 1);
+			if (error_number != 1) {
+				//ris = (uint8_t) (ris + '0');//readable ascii
+				USART1_Write(&error_number, 1);
 				USART1_Write(" ERROR\n", 7);
 				readErr++;
-			}else{
+			} else {
 				//USART1_Write("NR\n", 3);
 				readWait++;
 			}
