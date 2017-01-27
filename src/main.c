@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
 
 	timer_start();
 
-	USART1_Init(115200);
+	USART1_Init(256000);
 
 	USART1_Write("START1\n", 7);
 
@@ -176,7 +176,7 @@ int main(int argc, char* argv[]) {
 		static uint32_t last = 0;
 		static uint32_t readSec = 0, readErr = 0, readWait = 0;
 
-		//last = time;
+		last = time;
 		if (time - last >= 1000000) {
 			last = time;
 			char buffer[33];
@@ -235,32 +235,38 @@ int main(int argc, char* argv[]) {
 			acce_get_data(&acce);
 
 //			temp_get_data(&temp);
-			/*
-			 int t;
 
-			 USART1_Write("GG", 2);
-			 t = abs(gyro.x);
-			 USART1_Write(&t, 2);
+			static uint8_t count = 0;
 
-			 t = abs(gyro.y);
-			 USART1_Write(&t, 2);
+			count++;
 
-			 t = abs(gyro.z);
-			 USART1_Write(&t, 2);
+			if (count == 16) {
+				count = 0;
 
-			 USART1_Write("\n", 1);
-			 */
-			/*
-			 USART1_Write("AA", 2);
-			 t = abs(acce.x);
-			 USART1_Write(&t, 2);
+				int16_t t;
 
-			 t = abs(acce.y);
-			 USART1_Write(&t, 2);
+				USART1_Write("GG", 2);
+				t = gyro.x;
+				USART1_Write(&t, 2);
 
-			 t = abs(acce.z);
-			 USART1_Write(&t, 2);
-			 */
+				t = gyro.y;
+				USART1_Write(&t, 2);
+
+				t = gyro.z;
+				USART1_Write(&t, 2);
+
+				USART1_Write("\n", 1);
+
+				USART1_Write("AA", 2);
+				t = acce.x;
+				USART1_Write(&t, 2);
+
+				t = acce.y;
+				USART1_Write(&t, 2);
+
+				t = acce.z;
+				USART1_Write(&t, 2);
+			}
 			//USART1_Write("r\n", 2);
 		} else {
 			if (error_number != 1) {
