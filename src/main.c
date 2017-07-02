@@ -50,29 +50,16 @@
 
 #include "string.h"
 
+#include "error.h"
+
 #include "gyro.h"
 #include "acce.h"
+#include "magn.h"
 #include "temperature.h"
 #include "serial/usart.h"
-
-#define AIRCR_VECTKEY_MASK    ((uint32_t)0x05FA0000)
+#include "FreeDCM/dcm.h"
 
 volatile int data_is_int = 0;
-
-void systemReset(void) {
-	// Generate system reset
-	SCB->AIRCR = AIRCR_VECTKEY_MASK | (uint32_t) 0x04;
-}
-
-void systemResetToBootloader(void) {
-	// 1FFFF000 -> 20000200 -> SP
-	// 1FFFF004 -> 1FFFF021 -> PC
-
-	*((uint32_t *) 0x20009FFC) = 0xDEADBEEF; // 40KB SRAM STM32F30X
-
-	systemReset();
-	//NVIC_SystemReset();
-}
 
 void tmp(void) {
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
@@ -125,13 +112,19 @@ int main(int argc, char* argv[]) {
 
 	timer_start();
 
-	USART1_Init(256000);
+	USART1_Init(921600);
 
 	USART1_Write("START1\n", 7);
 
 	blink_led_init();
 
 	USART1_Write("START2\n", 7);
+
+	//wait for one char
+	uint8_t tmp;
+	while ( !USART1_Read(&tmp,1) ){
+		timer_sleep(100);
+	}
 
 	//tmp();
 
@@ -223,18 +216,25 @@ int main(int argc, char* argv[]) {
 		 struct vector3f gyro, acce;
 		 float temp;
 		 */
+		//USART1_Write("UPDSTR\n", 7);
+
 		error_number = gyro_update(time);
 
+		//USART1_Write("UPDEND\n", 7);
+
 		if (error_number == 0) {
+			//USART1_Write("UPDEND", 6);
 			readSec++;
 
-			struct vector3f gyro, acce;
+			struct vector3f gyro, acce, magne;
 
 			gyro_get_data(&gyro);
 
 			acce_get_data(&acce);
 
 //			temp_get_data(&temp);
+
+			magne_get_data(&magne);
 
 			static uint8_t count = 0;
 
@@ -255,8 +255,6 @@ int main(int argc, char* argv[]) {
 				t = gyro.z;
 				USART1_Write(&t, 2);
 
-				USART1_Write("\n", 1);
-
 				USART1_Write("AA", 2);
 				t = acce.x;
 				USART1_Write(&t, 2);
@@ -265,6 +263,16 @@ int main(int argc, char* argv[]) {
 				USART1_Write(&t, 2);
 
 				t = acce.z;
+				USART1_Write(&t, 2);
+
+				USART1_Write("MM", 2);
+				t = magne.x;
+				USART1_Write(&t, 2);
+
+				t = magne.y;
+				USART1_Write(&t, 2);
+
+				t = magne.z;
 				USART1_Write(&t, 2);
 			}
 			//USART1_Write("r\n", 2);
@@ -275,7 +283,7 @@ int main(int argc, char* argv[]) {
 				USART1_Write(" ERROR\n", 7);
 				readErr++;
 			} else {
-				//USART1_Write("NR\n", 3);
+				//USART1_Write("   NR\n", 6);
 				readWait++;
 			}
 

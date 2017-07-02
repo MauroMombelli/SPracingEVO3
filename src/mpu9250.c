@@ -6,6 +6,8 @@
 #include "spi.h"
 #include "Timer.h"
 
+#include "error.h"
+
 /*public interface*/
 #include "gyro.h"
 #include "acce.h"
@@ -15,8 +17,6 @@
 /* debug with blink xD */
 #include "BlinkLed.h"
 #include "serial/usart.h"
-
-#define MPU_RA_WHO_AM_I 0x75
 
 #define MPU_RA_XG_OFFS_TC       0x00    //[7] PWR_MODE, [6:1] XG_OFFS_TC, [0] OTP_BNK_VLD
 #define MPU_RA_YG_OFFS_TC       0x01    //[7] PWR_MODE, [6:1] YG_OFFS_TC, [0] OTP_BNK_VLD
@@ -106,6 +106,8 @@
 #define MPU_RA_FIFO_COUNTL      0x73
 #define MPU_RA_FIFO_R_W         0x74
 #define MPU_RA_WHO_AM_I         0x75
+
+#define MPU9250_WHO_AM_I_CONST (0x71)
 
 #define MPU6500_CS_GPIO                  GPIOB
 #define MPU6500_CS_PIN                   GPIO_Pin_9
@@ -240,50 +242,160 @@ enum accel_fsr_e {
 	INV_FSR_2G = 0, INV_FSR_4G, INV_FSR_8G, INV_FSR_16G, NUM_ACCEL_FSR
 };
 
+#define AK8963_I2C_ADDR 0x0C
+#define AK8963_WIA 0x00
+#define AK8963_CNTL1 0x0A
+#define AK8963_CNTL2 0x0B
+#define AK8963_MAG_REG_STATUS1 0x02
+#define AK8963_MAG_REG_HXL 0x03
+
+void writeAK8963(uint8_t reg, uint8_t val) { //max 7 byte
+	mpu6500WriteRegister(MPU_RA_I2C_SLV0_ADDR, AK8963_I2C_ADDR); // Set address (write)
+	mpu6500WriteRegister(MPU_RA_I2C_SLV0_REG, reg); // Set register
+	mpu6500WriteRegister(MPU_RA_I2C_SLV0_DO, val); // Set value to write
+	mpu6500WriteRegister(MPU_RA_I2C_SLV0_CTRL, 0x81); // start writing
+}
+
+uint8_t readAK8963(uint8_t reg, uint8_t *val, uint8_t len) { //max 7 byte
+	mpu6500WriteRegister(MPU_RA_I2C_SLV0_ADDR, AK8963_I2C_ADDR | 0x80); // Set address (read)
+	mpu6500WriteRegister(MPU_RA_I2C_SLV0_REG, reg); // Set register
+	mpu6500WriteRegister(MPU_RA_I2C_SLV0_CTRL, len | 0x80); // Set data len and start reading
+
+	timer_sleep(10);
+
+	return mpu6500ReadRegister(MPU_RA_EXT_SENS_DATA_00, len, val);   // read I2C
+}
+
+void initAK8963(void) {
+	while (1){
+		check_for_reset();
+		USART1_Write("B", 1);
+
+		writeAK8963(AK8963_CNTL2, 0x01); // reboot the chip
+
+		uint8_t ris[1];
+		uint8_t ack;
+		uint32_t start = millis();
+		do{
+			timer_sleep(100);
+			ack = readAK8963(AK8963_WIA, ris, 1);
+			if (ack) {
+				//error
+				USART1_Write("BADAMG", 6);
+				USART1_Write("\n", 1);
+			}
+
+			if (ris[0] != 0x48) {
+				USART1_Write("BADMG", 5);
+				USART1_Write(&(ris[0]), 1);
+				USART1_Write("\n", 1);
+			}
+		}while (millis() - start < 8000 && ris[0] != 0x48);
+
+		if (ris[0] != 0x48) {
+			USART1_Write("BADMX", 5);
+			USART1_Write(&(ris[0]), 1);
+			USART1_Write("\n", 1);
+			continue;
+		}
+
+		writeAK8963(AK8963_CNTL1, 0x00); // mandatory powerdown before changing conf
+
+		do{
+			timer_sleep(100); //should be 100us, we wait 100ms
+
+			//writeAK8963(AK8963_CNTL1, 0x10 | 0x06); // 16bit mode, 100Hz ODR
+
+			ack = readAK8963(AK8963_CNTL1, ris, 1);
+
+			USART1_Write("GOTCF", 5);
+			USART1_Write(&(ack), 1);
+			USART1_Write(&(ris[0]), 1);
+			USART1_Write("\n", 1);
+		}while (millis() - start < 8000 && ris[0] != 0);
+
+		ris[0] = 0x0FF;
+		timer_sleep(100); //should be 100us, we wait 100ms
+
+		writeAK8963(AK8963_CNTL1, 0x10 | 0x06); // 16bit mode, 100Hz ODR
+
+		start = millis();
+		do{
+			timer_sleep(100); //should be 100us, we wait 100ms
+			ack = readAK8963(AK8963_CNTL1, ris, 1);
+		}while (millis() - start < 8000 && ris[0] == 0);
+
+		if ( ris[0] != (0x10 | 0x06) ) {
+			USART1_Write("BADCF", 5);
+			USART1_Write(&(ack), 1);
+			USART1_Write(&(ris[0]), 1);
+			USART1_Write("\n", 1);
+			timer_sleep(1000);
+		}else{
+			USART1_Write("GODCF", 5);
+			break;
+		}
+
+	}
+
+	timer_sleep(100);
+
+	uint8_t tmp[8] = {0xFF};
+	readAK8963(AK8963_MAG_REG_STATUS1, tmp, 8); //read all register, most important is status 2 to enable the next reading
+}
+
 #define MPU6500_BIT_RESET                   (0x80)
 
 void mpu6500InitLogic(void) {
 //mpuIntExtiInit(); //hw for interrupt
 
-
 	mpu6500WriteRegister(MPU_RA_PWR_MGMT_1, MPU6500_BIT_RESET);
 
 	/*
-	while (i2cRead(MPU6500_ADDRESS, MPU6500_PWR_MGMT_1) & (1 << 7)) {
-	        // Wait for the bit to clear
-	};
-	*/
+	 while (i2cRead(MPU6500_ADDRESS, MPU6500_PWR_MGMT_1) & (1 << 7)) {
+	 // Wait for the bit to clear
+	 };
+	 */
 	timer_sleep(100);
 
 	mpu6500WriteRegister(MPU_RA_SIGNAL_PATH_RESET, 0x07);
-	mpu6500WriteRegister(MPU_RA_USER_CTRL, 0x01);
+	//mpu6500WriteRegister(MPU_RA_USER_CTRL, 0x01);
 
+	//mpu6500WriteRegister(MPU_RA_USER_CTRL, 0x01);
+	USART1_Write("A", 1);
 	timer_sleep(100);
 	mpu6500WriteRegister(MPU_RA_PWR_MGMT_1, 0x0); //0x10 == gyro disabled
 	timer_sleep(100);
-	/*
-	mpu6500WriteRegister(MPU_RA_ACCEL_CONFIG, INV_FSR_8G << 3);
-	*/
-	mpu6500WriteRegister(MPU_RA_CONFIG, 7 ); //7 == 8000Hz gyro, * == 1kHz. SPECIAL CASE: MPU_RA_GYRO_CONFIG == 1, 2, or 3 == 32kHz
+
+	mpu6500WriteRegister(MPU_RA_ACCEL_CONFIG, INV_FSR_4G << 3); //4g
+
+	mpu6500WriteRegister(MPU_RA_CONFIG, 7); //7 == 8000Hz gyro, * == 1kHz. SPECIAL CASE: MPU_RA_GYRO_CONFIG == 1, 2, or 3 == 32kHz
 	mpu6500WriteRegister(MPU_RA_GYRO_CONFIG, (INV_FSR_500DPS << 3)); //3 == use FsChose to set Bandwidth
-	mpu6500WriteRegister(MPU_RA_FF_THR, 8); //8 == 4kHz
+	mpu6500WriteRegister(MPU_RA_FF_THR, 8); //8 == 4kHz, 0 == 1kHz
 
 	//mpu6500WriteRegister(MPU_RA_SMPLRT_DIV, 0); // set Divider to 0
 
 	//mpu6500WriteRegister(MPU_RA_FIFO_EN, 0x78); //enable FIFO for gyro and acce XYZ
 
-	timer_sleep(15);
 
 // Data ready interrupt configuration
 
-	mpu6500WriteRegister(MPU_RA_INT_PIN_CFG, 0 << 7 | 0 << 6 | 0 << 5 | 0 << 4 | 0 << 3 | 0 << 2 | 0 << 1 | 0 << 0); // INT_ANYRD_2CLEAR, BYPASS_EN
+	//mpu6500WriteRegister(MPU_RA_I2C_MST_CTRL, 0x0D); // Multi-master, I2C stop then start cond., clk 400KHz
+
+	timer_sleep(100);
+
+	mpu6500WriteRegister(MPU_RA_USER_CTRL, 0x32); // enable multi master, reset i2c
+
+	//mpu6500WriteRegister(MPU_RA_INT_PIN_CFG, 0x22); // INT_ANYRD_2CLEAR, BYPASS_EN
+
+	timer_sleep(15);
+
+	initAK8963();
 
 	mpu6500WriteRegister(MPU_RA_INT_ENABLE, 0x01); // RAW_RDY_EN interrupt enable
 }
 
-#define MPU9250_WHO_AM_I_CONST (0x71)
-
-struct vector3f gyro, acce;
+struct vector3f gyro, acce, magne;
 float temp = 0;
 
 uint8_t init(void) {
@@ -304,6 +416,11 @@ uint8_t init(void) {
 	uint8_t response_who;
 	uint8_t ack = mpu6500ReadRegister(MPU_RA_WHO_AM_I, 1, &response_who);
 	if (ack == 0) {
+		while (response_who != MPU9250_WHO_AM_I_CONST) {
+			USART1_Write("BADID", 5);
+			USART1_Write(&response_who, 1);
+			USART1_Write("/n", 1);
+		}
 		return !(response_who == MPU9250_WHO_AM_I_CONST);
 	}
 
@@ -322,6 +439,10 @@ uint8_t gyro_init(void) {
 	return init();
 }
 
+uint8_t magne_init(void) {
+	return init();
+}
+
 uint8_t update(const uint32_t time_us) {
 	(void) time_us;
 	/*
@@ -334,9 +455,11 @@ uint8_t update(const uint32_t time_us) {
 	 */
 	if (!data_is_ready) {
 		return 1;
+	}else{
+		//USART1_Write("READRD\n", 7);
 	}
 
-	uint8_t data[6];
+	uint8_t data[8]; //magnetometer need to read 8 byte
 	uint8_t ack;
 
 	const uint8_t firstRegisterAcce = MPU_RA_ACCEL_XOUT_H; //0x3B to 0x40 is accel, 41 and 42 temp, 43 to 48 gyro
@@ -345,7 +468,7 @@ uint8_t update(const uint32_t time_us) {
 	if (ack) {
 		USART1_Write("ACCNOT\n", 7);
 		//return 2;
-	}else{
+	} else {
 
 		acce.x = (int16_t) ((data[0] << 8) | data[1]);
 		acce.y = (int16_t) ((data[2] << 8) | data[3]);
@@ -364,10 +487,33 @@ uint8_t update(const uint32_t time_us) {
 	if (ack) {
 		USART1_Write("GIRNOT\n", 7);
 		//return ack;
-	}else{
+	} else {
 		gyro.x = (int16_t) ((data[0] << 8) | data[1]);
 		gyro.y = (int16_t) ((data[2] << 8) | data[3]);
 		gyro.z = (int16_t) ((data[4] << 8) | data[5]);
+	}
+
+	ack = readAK8963(AK8963_MAG_REG_STATUS1, data, 1);
+	if ( (data[0] & 0x01) && !ack) {
+		//data is ready
+		// read the magnetometer
+		ack = readAK8963(AK8963_MAG_REG_HXL, data, 7);
+		if (ack) {
+			USART1_Write("MAGNOT\n", 7);
+		} else {
+			if (!(data[6] & 0x08)) {
+				//data is valid
+				magne.x = (int16_t) ((data[1] << 8) | data[0]);
+				magne.y = (int16_t) ((data[3] << 8) | data[2]);
+				magne.z = (int16_t) ((data[5] << 8) | data[4]);
+				USART1_Write("MAG re\n", 7);
+			}else{
+				magne.x = (int16_t) ((data[1] << 8) | data[0]);
+				magne.y = (int16_t) ((data[3] << 8) | data[2]);
+				magne.z = (int16_t) ((data[5] << 8) | data[4]);
+				USART1_Write("MAG OV\n", 7);
+			}
+		}
 	}
 
 	//read status to reenable the interrupt
@@ -390,10 +536,23 @@ uint8_t gyro_update(const uint32_t time_us) {
 	return update(time_us);
 }
 
+uint8_t magne_update(const uint32_t time_us) {
+	return update(time_us);
+}
+
 uint8_t temp_get_data(float *ris) {
 	*ris = temp;
 
 	return true;
+}
+
+uint8_t magne_get_data(struct vector3f * const ris) {
+
+	ris->x = magne.x;
+	ris->y = magne.y;
+	ris->z = magne.z;
+
+	return 0;
 }
 
 uint8_t acce_get_data(struct vector3f * const ris) {
